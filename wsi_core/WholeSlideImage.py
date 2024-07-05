@@ -378,10 +378,20 @@ class WholeSlideImage(object):
     def _assertLevelDownsamples(self):
         level_downsamples = []
         dim_0 = self.wsi.level_dimensions[0]
+    
+        # Desired downsample factor
+        desired_downsample = 5
+    
+        for dim in self.wsi.level_dimensions:
+            estimated_downsample = (dim_0[0] / float(dim[0]), dim_0[1] / float(dim[1]))
         
-        for downsample, dim in zip(self.wsi.level_downsamples, self.wsi.level_dimensions):
-            estimated_downsample = (dim_0[0]/float(dim[0]), dim_0[1]/float(dim[1]))
-            level_downsamples.append(estimated_downsample) if estimated_downsample != (downsample, downsample) else level_downsamples.append((downsample, downsample))
+        # Check if estimated downsample is equal to the desired downsample factor
+            if estimated_downsample == (desired_downsample, desired_downsample):
+                level_downsamples.append(estimated_downsample)
+            else:
+                # Adjust dimensions to the desired downsample factor
+                adjusted_dim = (int(dim_0[0] / desired_downsample), int(dim_0[1] / desired_downsample))
+                level_downsamples.append((desired_downsample, desired_downsample))
         
         return level_downsamples
 
