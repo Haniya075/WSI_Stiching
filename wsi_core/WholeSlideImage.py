@@ -1,7 +1,6 @@
 import math
 import os
 import time
-import xml.etree.ElementTree as ET
 from xml.dom import minidom
 import multiprocessing as mp
 import cv2
@@ -12,7 +11,6 @@ from PIL import Image
 import pdb
 import h5py
 import math
-from wsi_core.wsi_utils import savePatchIter_bag_hdf5, initialize_hdf5_bag, coord_generator, save_hdf5, sample_indices, screen_coords, isBlackPatch, isWhitePatch, to_percentiles
 import itertools
 from wsi_core.util_classes import isInContourV1, isInContourV2, isInContourV3_Easy, isInContourV3_Hard, Contour_Checking_fn
 from utils.file_utils import load_pkl, save_pkl
@@ -234,29 +232,6 @@ class WholeSlideImage(object):
             img = img.resize((int(w*resizeFactor), int(h*resizeFactor)))
        
         return img
-
-    def process_contours(self, save_path, patch_level=0, patch_size=256, step_size=256, **kwargs):
-        save_path_hdf5 = os.path.join(save_path, str(self.name) + '.h5')
-        print("Creating patches for: ", self.name, "...",)
-        elapsed = time.time()
-        n_contours = len(self.contours_tissue)
-        print("Total number of contours to process: ", n_contours)
-        fp_chunk_size = math.ceil(n_contours * 0.05)
-        init = True
-        for idx, cont in enumerate(self.contours_tissue):
-            if (idx + 1) % fp_chunk_size == fp_chunk_size:
-                print('Processing contour {}/{}'.format(idx, n_contours))
-            # pdb.set_trace()
-            asset_dict, attr_dict = self.process_contour(cont, self.holes_tissue[idx], patch_level, save_path, patch_size, step_size, **kwargs)
-            if len(asset_dict) > 0:
-                if init:
-                    save_hdf5(save_path_hdf5, asset_dict, attr_dict, mode='w')
-                    init = False
-                else:
-                    save_hdf5(save_path_hdf5, asset_dict, mode='a')
-
-        return self.hdf5_file
-
 
     def process_contour(self, cont, contour_holes, patch_level, save_path, patch_size = 256, step_size = 256,
         contour_fn='four_pt', use_padding=True, top_left=None, bot_right=None):
