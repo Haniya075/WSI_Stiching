@@ -174,6 +174,130 @@ class WholeSlideImage(object):
         self.contours_tissue = [self.contours_tissue[i] for i in contour_ids]
         self.holes_tissue = [self.holes_tissue[i] for i in contour_ids]
 
+       def process_contours(self, save_path, patch_level=0, patch_size=256, step_size=256, **kwargs):
+        save_path_hdf5 = os.path.join(save_path, str(self.name) + '.h5')
+        print("Creating patches for: ", self.name, "...",)
+        elapsed = time.time()
+        n_contours = len(self.contours_tissue)
+        print("Total number of contours to process: ", n_contours)
+        fp_chunk_size = math.ceil(n_contours * 0.05)
+        init = True
+        for idx, cont in enumerate(self.contours_tissue):
+            if (idx + 1) % fp_chunk_size == fp_chunk_size:
+                print('Processing contour {}/{}'.format(idx, n_contours))
+            # pdb.set_trace()
+            asset_dict, attr_dict = self.process_contour(cont, self.holes_tissue[idx], patch_level, save_path, patch_size, step_size, **kwargs)
+            if len(asset_dict) > 0:
+                if init:
+                    save_hdf5(save_path_hdf5, asset_dict, attr_dict, mode='w')
+                    init = False
+                else:
+                    save_hdf5(save_path_hdf5, asset_dict, mode='a')
+
+        return self.hdf5_file
+
+
+    def process_contour(self, cont, contour_holes, patch_level, save_path, patch_size = 256, step_size = 256,
+        contour_fn='four_pt', use_padding=True, top_left=None, bot_right=None):
+        # pdb.set_trace()
+        start_x, start_y, w, h = cv2.boundingRect(cont) if cont is not None else (0, 0, self.level_dim[patch_level][0], self.level_dim[patch_level][1])
+
+        patch_downsample = (int(self.level_downsamples[patch_level][0]), int(self.level_downsamples[patch_level][1]))
+        ref_patch_size = (patch_size*patch_downsample[0], patch_size*patch_downsample[1])
+        
+        img_w, img_h = self.level_dim[0]
+        if use_padding:
+            stop_y = start_y+h
+            stop_x = start_x+w
+        else:
+            stop_y = min(start_y+h, img_h-ref_patch_size[1]+1)
+            stop_x = min(start_x+w, img_w-ref_patch_size[0]+1)
+        
+        print("Bounding Box:", start_x, start_y, w, h)
+        print("Contour Area:", cv2.contourArea(cont))
+
+        if bot_right is not None:
+            stop_y = min(bot_right[1], stop_y)
+            stop_x = min(bot_right[0], stop_x)
+        if top_left is not None:
+            start_y = max(top_left[1], start_y)
+            start_x = max(top_left[0], start_x)
+
+        if bot_right is not None or top_left is not None:
+            w, h = stop_x - start_x, stop_y - start_y
+            if w <= 0 or h <= 0:
+                print("Contour is not in specified ROI, skip")
+                return {}, {}
+            else:
+                print("Adjusted Bounding Box:", start_x, start_y, w, h)
+    
+        if isinstance(contour_fn, str):
+            if contour_fn == 'four_pt':
+                cont_check_fn = isInContourV3_Easy(contour=cont, patch_size=ref_patch_size[0], center_shift=0.5)
+            elif contour_fn == 'four_pt_hard':
+                cont_check_fn = isInContourV3_Hard(contour=cont, patch_size=ref_patch_size[0], center_shift=0.5)
+            elif contour_fn == 'center':
+                cont_check_fn = isInContourV2(contour=cont, patch_size=ref_patch_size[0])
+            elif contour_fn == 'basic':
+                cont_check_fn = isInContourV1(contour=cont)
+            else:
+                raise NotImplementedError
+        else:
+            assert isinstance(contour_fn, Contour_Checking_fn)
+            cont_check_fn = contour_fn
+
+        
+        step_size_x = step_size * patch_downsample[0]
+        step_size_y = step_size * patch_downsample[1]
+
+        x_range = np.arange(start_x, stop_x, step=step_size_x)
+        y_range = np.arange(start_y, stop_y, step=step_size_y)
+        x_coords, y_coords = np.meshgrid(x_range, y_range, indexing='ij')
+        coord_candidates = np.array([x_coords.flatten(), y_coords.flatten()]).transpose()
+
+        num_workers = mp.cpu_count()
+        if num_workers > 4:
+            num_workers = 4
+        pool = mp.Pool(num_workers)
+        # pdb.set_trace()
+        # iterable = [(coord, contour_holes, ref_patch_size[0], cont_check_fn) for coord in coord_candidates]
+        # iter_patch_label = [(coord, self.contours_tumor, ref_patch_size[0], cont_check_fn) for coord in coord_candidates]
+        iterable = [(coord, contour_holes, ref_patch_size[0], cont_check_fn) for coord in coord_candidates]
+
+        results = pool.starmap(WholeSlideImage.process_coord_candidate, iterable)
+        pool.close()
+
+        # pdb.set_trace()
+
+        results = np.array([result for result in results if result is not None])
+        
+        print('Extracted {} coordinates'.format(len(results)))
+
+        if len(results)>1:
+            asset_dict = {'coords' :          results}
+            # pdb.set_trace()
+            attr = {'patch_size' :            patch_size, # To be considered...
+                    'patch_level' :           patch_level,
+                    'downsample':             self.level_downsamples[patch_level],
+                    'downsampled_level_dim' : tuple(np.array(self.level_dim[patch_level])),
+                    'level_dim':              self.level_dim[patch_level],
+                    'name':                   self.name,
+                    'save_path':              save_path}
+
+            attr_dict = { 'coords' : attr}
+            return asset_dict, attr_dict
+
+        else:
+            return {}, {}
+
+    @staticmethod
+    def process_coord_candidate(coord, contour_holes, ref_patch_size, cont_check_fn):
+        if WholeSlideImage.isInContours(cont_check_fn, coord, contour_holes, ref_patch_size):
+            return coord
+        else:
+            return None
+
+    
     def visWSI(self, vis_level=0, color = (0,255,0), hole_color = (0,0,255), annot_color=(255,0,0), 
                     line_thickness=250, max_size=None, top_left=None, bot_right=None, custom_downsample=1, view_slide_only=False,
                     number_contours=False, seg_display=True, annot_display=True):
