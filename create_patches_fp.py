@@ -2,7 +2,7 @@
 from wsi_core.WholeSlideImage import WholeSlideImage
 from wsi_core.wsi_utils import StitchCoords
 from wsi_core.batch_process_utils import initialize_df
-from image_crop import crop_image,calculate_reduction
+from Image_Crop import crop_image
 # other imports
 import os
 import numpy as np
