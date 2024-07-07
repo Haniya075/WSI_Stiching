@@ -10,16 +10,8 @@ def crop_image(image, output_path):
     # Convert the image to grayscale
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     
-    # Calculate the Laplacian variance of the grayscale image
-    variance = cv2.Laplacian(gray, cv2.CV_64F).var()
-    
-    # If variance is too low, indicating a uniform region, adjust the threshold
-    if variance < 50:
-        _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
-    else:
-        # Apply a binary threshold to get the detailed regions
-        blurred = cv2.GaussianBlur(gray, (5, 5), 0)
-        _, thresh = cv2.threshold(blurred, 150, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)
+    # Apply a binary threshold to separate colorful details from the black background
+    _, thresh = cv2.threshold(gray, 1, 255, cv2.THRESH_BINARY)
     
     # Find contours in the thresholded image
     contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
@@ -43,12 +35,6 @@ def crop_image(image, output_path):
     cropped_image = Image.fromarray(cropped_image)
     
     # Save the cropped image
-    #output_folder = r'D:\CheckOutput'
-    #if not os.path.exists(output_folder):
-        #os.makedirs(output_folder)
-    
-    #img_name = f'Output_Image_{count}.png'
-    #output_path = os.path.join(output_folder, img_name)
     cropped_image.save(output_path)
     
     #return Image.fromarray(image), cropped_image
