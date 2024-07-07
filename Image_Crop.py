@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 from PIL import Image
 
-def crop_image(image, count):
+def crop_image(image, output_path):
     # Convert the PIL image to a numpy array (OpenCV image)
     image = np.array(image)
     
@@ -47,8 +47,8 @@ def crop_image(image, count):
     if not os.path.exists(output_folder):
         os.makedirs(output_folder)
     
-    img_name = f'Output_Image_{count}.png'
-    output_path = os.path.join(output_folder, img_name)
+    #img_name = f'Output_Image_{count}.png'
+    #output_path = os.path.join(output_folder, img_name)
     cropped_image.save(output_path)
     
     return Image.fromarray(image), cropped_image
