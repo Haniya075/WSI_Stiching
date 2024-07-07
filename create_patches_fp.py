@@ -222,7 +222,6 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
     					os.makedirs(cropped_save_dir)
 				cropped_path=os.path.join(cropped_save_dir,slide_id+'.jpg')
 				crop_image(heatmap,cropped_path)
-				print("TYPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",type(heatmap))
 				
 		print("segmentation took {} seconds".format(seg_time_elapsed))
 		print("patching took {} seconds".format(patch_time_elapsed))
