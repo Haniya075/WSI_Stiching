@@ -215,7 +215,8 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
 				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=5)
 				stitch_path = os.path.join(stitch_save_dir, slide_id+'.jpg')
 				heatmap.save(stitch_path)
-
+				print("TYPEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE",type(heatmap))
+				
 		print("segmentation took {} seconds".format(seg_time_elapsed))
 		print("patching took {} seconds".format(patch_time_elapsed))
 		print("stitching took {} seconds".format(stitch_time_elapsed))
