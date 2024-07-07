@@ -43,23 +43,12 @@ def crop_image(image, output_path):
     cropped_image = Image.fromarray(cropped_image)
     
     # Save the cropped image
-    output_folder = r'D:\CheckOutput'
-    if not os.path.exists(output_folder):
-        os.makedirs(output_folder)
+    #output_folder = r'D:\CheckOutput'
+    #if not os.path.exists(output_folder):
+        #os.makedirs(output_folder)
     
     #img_name = f'Output_Image_{count}.png'
     #output_path = os.path.join(output_folder, img_name)
     cropped_image.save(output_path)
     
-    return Image.fromarray(image), cropped_image
-
-def calculate_reduction(original_image, cropped_image):
-    original_width, original_height = original_image.size
-    cropped_width, cropped_height = cropped_image.size
-    
-    original_area = original_width * original_height
-    cropped_area = cropped_width * cropped_height
-    
-    reduction_percent = 100 * (original_area - cropped_area) / original_area
-    
-    return original_width, original_height, cropped_width, cropped_height, reduction_percent
+    #return Image.fromarray(image), cropped_image
