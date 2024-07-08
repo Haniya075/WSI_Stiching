@@ -35,7 +35,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
     return Image.fromarray(canvas)
 
 
-def StitchCoords(hdf5_file_path, wsi_object, downscale=15, draw_grid=False, bg_color=(0,0,0), alpha=-1):
+def StitchCoords(hdf5_file_path, wsi_object, downscale=35, draw_grid=False, bg_color=(0,0,0), alpha=-1):
     print("WORKSSS")
     wsi = wsi_object.getOpenSlide()
     vis_level = wsi.get_best_level_for_downsample(downscale)
