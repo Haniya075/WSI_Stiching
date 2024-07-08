@@ -14,6 +14,7 @@ import pandas as pd
 
 def stitching(file_path, wsi_object, downscale = 5):
 	start = time.time()
+	print("DOWNSCALE : ",downscale)
 	heatmap = StitchCoords(file_path, wsi_object, downscale=downscale, bg_color=(0,0,0), alpha=-1, draw_grid=False)
 	total_time = time.time() - start
 	
