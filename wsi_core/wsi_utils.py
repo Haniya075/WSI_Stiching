@@ -35,10 +35,18 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
     return Image.fromarray(canvas)
 
 
-def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
-    print("WORKSSS")
+def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0, 0, 0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
+    
+    # Find the best possible downscale that doesn't exceed Image.MAX_IMAGE_PIXELS
     vis_level = wsi.get_best_level_for_downsample(downscale)
+    w, h = wsi.level_dimensions[vis_level]
+    
+    while w * h > Image.MAX_IMAGE_PIXELS:
+        downscale += 1
+        vis_level = wsi.get_best_level_for_downsample(downscale)
+        w, h = wsi.level_dimensions[vis_level]
+    
     file = h5py.File(hdf5_file_path, 'r')
     dset = file['coords']
     coords = dset[:]
@@ -49,26 +57,22 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
 
     w, h = wsi.level_dimensions[vis_level]
 
-    print('downscaled size for stitching: {} x {}'.format(w, h))
+    print('downscaled size for stiching: {} x {}'.format(w, h))
     print('number of patches: {}'.format(len(coords)))
     
     patch_size = dset.attrs['patch_size']
     patch_level = dset.attrs['patch_level']
     print('patch size: {}x{} patch level: {}'.format(patch_size, patch_size, patch_level))
     patch_size = tuple((np.array((patch_size, patch_size)) * wsi.level_downsamples[patch_level]).astype(np.int32))
-    print('ref patch size: {}x{}'.format(patch_size, patch_size))
+    print('ref patch size: {}x{}'.format(patch_size[0], patch_size[1]))
 
-    # Check if downscaled image size is too large, and adjust downscale factor if necessary
-    while w * h > Image.MAX_IMAGE_PIXELS:
-        downscale += 1
-        vis_level = wsi.get_best_level_for_downsample(downscale)
-        w, h = wsi.level_dimensions[vis_level]
-        print('Adjusted downscale to {}: new downscaled size {} x {}'.format(downscale, w, h))
-
+    if w * h > Image.MAX_IMAGE_PIXELS: 
+        raise Image.DecompressionBombError("Visualization Downscale %d is too large" % downscale)
+    
     if alpha < 0 or alpha == -1:
-        heatmap = Image.new(size=(w,h), mode="RGB", color=bg_color)
+        heatmap = Image.new(size=(w, h), mode="RGB", color=bg_color)
     else:
-        heatmap = Image.new(size=(w,h), mode="RGBA", color=bg_color + (int(255 * alpha),))
+        heatmap = Image.new(size=(w, h), mode="RGBA", color=bg_color + (int(255 * alpha),))
     
     heatmap = np.array(heatmap)
     heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level, indices=None, draw_grid=draw_grid)
