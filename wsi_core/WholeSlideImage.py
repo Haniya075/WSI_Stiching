@@ -238,30 +238,7 @@ class WholeSlideImage(object):
        
         return img
 
-    def createPatches_bag_hdf5(self, save_path, patch_level=0, patch_size=256, step_size=256, save_coord=True, **kwargs):
-        contours = self.contours_tissue
-        contour_holes = self.holes_tissue
 
-        print("Creating patches for: ", self.name, "...",)
-        elapsed = time.time()
-        for idx, cont in enumerate(contours):
-            patch_gen = self._getPatchGenerator(cont, idx, patch_level, save_path, patch_size, step_size, **kwargs)
-            
-            if self.hdf5_file is None:
-                try:
-                    first_patch = next(patch_gen)
-
-                # empty contour, continue
-                except StopIteration:
-                    continue
-
-                file_path = initialize_hdf5_bag(first_patch, save_coord=save_coord)
-                self.hdf5_file = file_path
-
-            for patch in patch_gen:
-                savePatchIter_bag_hdf5(patch)
-
-        return self.hdf5_file
 
     def createTopkPatches_bag_hdf5(self, save_path, target_coords, patch_level=1, patch_size=256, step_size=256, save_coord=True,
                                **kwargs):
