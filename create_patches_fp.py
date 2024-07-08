@@ -12,7 +12,7 @@ import pdb
 import pandas as pd
 
 
-def stitching(file_path, wsi_object, downscale = 15):
+def stitching(file_path, wsi_object, downscale = 35):
 	start = time.time()
 	print("DOWNSCALE : ",downscale)
 	heatmap = StitchCoords(file_path, wsi_object, downscale=downscale, bg_color=(0,0,0), alpha=-1, draw_grid=False)
@@ -215,7 +215,7 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
 		if stitch:
 			file_path = os.path.join(patch_save_dir, slide_id+'.h5')
 			if os.path.isfile(file_path):
-				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=15)
+				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=35)
 				stitch_path = os.path.join(stitch_save_dir, slide_id+'.jpg')
 				heatmap.save(stitch_path)
 				cropped_save_dir=r"./patches/cropped"
