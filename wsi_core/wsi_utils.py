@@ -80,7 +80,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
 
     w, h = wsi.level_dimensions[vis_level]
 
-    print('downscaled size for stiching: {} x {}'.format(w, h))
+    print('downscaled size for stitching: {} x {}'.format(w, h))
     print('number of patches: {}'.format(len(coords)))
     
     patch_size = dset.attrs['patch_size']
@@ -89,9 +89,13 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
     patch_size = tuple((np.array((patch_size, patch_size)) * wsi.level_downsamples[patch_level]).astype(np.int32))
     print('ref patch size: {}x{}'.format(patch_size, patch_size))
 
-    if w*h > Image.MAX_IMAGE_PIXELS: 
-        raise Image.DecompressionBombError("Visualization Downscale %d is too large" % downscale)
-    
+    # Check if downscaled image size is too large, and adjust downscale factor if necessary
+    while w * h > Image.MAX_IMAGE_PIXELS:
+        downscale += 1
+        vis_level = wsi.get_best_level_for_downsample(downscale)
+        w, h = wsi.level_dimensions[vis_level]
+        print('Adjusted downscale to {}: new downscaled size {} x {}'.format(downscale, w, h))
+
     if alpha < 0 or alpha == -1:
         heatmap = Image.new(size=(w,h), mode="RGB", color=bg_color)
     else:
