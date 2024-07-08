@@ -43,15 +43,24 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
     wsi = wsi_object.getOpenSlide()
     print("WORKSSSSSSSSSSSSS")
     
-    # Find the best possible downscale that doesn't exceed Image.MAX_IMAGE_PIXELS
-    vis_level = wsi.get_best_level_for_downsample(downscale)
+    # Attempt to find the best possible downscale that doesn't exceed Image.MAX_IMAGE_PIXELS
+    try:
+        vis_level = wsi.get_best_level_for_downsample(downscale)
+    except Exception as e:
+        print(f"Error: {e}. Attempting to adjust downscale level.")
+        # Try reducing downscale until a valid level is found or downscale < 1
+        while downscale > 1:
+            downscale -= 1
+            try:
+                vis_level = wsi.get_best_level_for_downsample(downscale)
+                break  # Exit loop if a valid level is found
+            except Exception as e:
+                print(f"Error: {e}. Continuing to adjust downscale.")
+
+        if downscale < 1:
+            raise ValueError("Cannot find a suitable downscale level within acceptable limits.")
+
     w, h = wsi.level_dimensions[vis_level]
-    count=downscale
-    while w * h > Image.MAX_IMAGE_PIXELS:
-        downscale += 1
-        vis_level = wsi.get_best_level_for_downsample(count-1)
-        w, h = wsi.level_dimensions[vis_level]
-        count-=1
     
     file = h5py.File(hdf5_file_path, 'r')
     dset = file['coords']
@@ -63,7 +72,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
 
     w, h = wsi.level_dimensions[vis_level]
 
-    print('downscaled size for stiching: {} x {}'.format(w, h))
+    print('downscaled size for stitching: {} x {}'.format(w, h))
     print('number of patches: {}'.format(len(coords)))
     
     patch_size = dset.attrs['patch_size']
