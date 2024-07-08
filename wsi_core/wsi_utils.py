@@ -41,15 +41,17 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
 
 def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0, 0, 0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
+    print("WORKSSSSSSSSSSSSS")
     
     # Find the best possible downscale that doesn't exceed Image.MAX_IMAGE_PIXELS
     vis_level = wsi.get_best_level_for_downsample(downscale)
     w, h = wsi.level_dimensions[vis_level]
-    
+    count=downscale
     while w * h > Image.MAX_IMAGE_PIXELS:
         downscale += 1
-        #vis_level = wsi.get_best_level_for_downsample(downscale)
+        vis_level = wsi.get_best_level_for_downsample(count-1)
         w, h = wsi.level_dimensions[vis_level]
+        count-=1
     
     file = h5py.File(hdf5_file_path, 'r')
     dset = file['coords']
