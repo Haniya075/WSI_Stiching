@@ -15,7 +15,7 @@ import itertools
 from wsi_core.wsi_utils import save_hdf5
 from wsi_core.util_classes import isInContourV1, isInContourV2, isInContourV3_Easy, isInContourV3_Hard, Contour_Checking_fn
 
-Image.MAX_IMAGE_PIXELS = 933120000
+Image.MAX_IMAGE_PIXELS = 9331200000
 
 class WholeSlideImage(object):
     def __init__(self, path):
