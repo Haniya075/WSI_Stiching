@@ -134,7 +134,9 @@ class WholeSlideImage(object):
 
             return foreground_contours, hole_contours
         # pdb.set_trace()
-        
+
+        print("SEG LEVEL : ",seg_level)
+        print("self.level_dim ",self.level_dim)
         img = np.array(self.wsi.read_region((0,0), seg_level, self.level_dim[seg_level]))
         img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)  # Convert to HSV space
         img_med = cv2.medianBlur(img_hsv[:,:,1], mthresh)  # Apply median blurring
@@ -151,6 +153,7 @@ class WholeSlideImage(object):
             img_otsu = cv2.morphologyEx(img_otsu, cv2.MORPH_CLOSE, kernel)                 
 
         scale = self.level_downsamples[seg_level]
+        print("SCALE ",scale)
         scaled_ref_patch_area = int(ref_patch_size**2 / (scale[0] * scale[1]))
 
         filter_params = filter_params.copy()
