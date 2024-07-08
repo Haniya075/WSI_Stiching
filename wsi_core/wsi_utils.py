@@ -7,6 +7,10 @@ import math
 import cv2
 
 
+def DrawGrid(img, coord, shape, thickness=2, color=(0,0,0,255)):
+    cv2.rectangle(img, tuple(np.maximum([0, 0], coord-thickness//2)), tuple(coord - thickness//2 + np.array(shape)), (0, 0, 0, 255), thickness=thickness)
+    return img
+
 def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices=None, verbose=1, draw_grid=True):
     downsamples = wsi_object.wsi.level_downsamples[vis_level]
     if indices is None:
@@ -29,8 +33,8 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
         coord = np.ceil(coord / downsamples).astype(np.int32)
         canvas_crop_shape = canvas[coord[1]:coord[1]+patch_size[1], coord[0]:coord[0]+patch_size[0], :3].shape[:2]
         canvas[coord[1]:coord[1]+patch_size[1], coord[0]:coord[0]+patch_size[0], :3] = patch[:canvas_crop_shape[0], :canvas_crop_shape[1], :]
-        #if draw_grid:
-            #DrawGrid(canvas, coord, patch_size)
+        if draw_grid:
+            DrawGrid(canvas, coord, patch_size)
 
     return Image.fromarray(canvas)
 
