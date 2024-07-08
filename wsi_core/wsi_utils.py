@@ -34,7 +34,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
 
     return Image.fromarray(canvas)
 
-"""
+
 def StitchPatches(hdf5_file_path, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
     file = h5py.File(hdf5_file_path, 'r')
     dset = file['imgs']
@@ -66,7 +66,7 @@ def StitchPatches(hdf5_file_path, downscale=5, draw_grid=False, bg_color=(0,0,0)
     
     file.close()
     return heatmap
-
+"""
 def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
     vis_level = wsi.get_best_level_for_downsample(downscale)
