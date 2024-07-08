@@ -381,7 +381,12 @@ class WholeSlideImage(object):
         
         for downsample, dim in zip(self.wsi.level_downsamples, self.wsi.level_dimensions):
             estimated_downsample = (dim_0[0]/float(dim[0]), dim_0[1]/float(dim[1]))
+            print(estimated_downsample,"ESTIMATED DOWNSAMPLE ")
             level_downsamples.append(estimated_downsample) if estimated_downsample != (downsample, downsample) else level_downsamples.append((downsample, downsample))
+
+        print("ASSERT LEVEL DOWSSAMPLE: ")
+        print("dim[0]",dim_0)
+        print("LVL downsample ",level_downsamples)
         
         return level_downsamples
         
