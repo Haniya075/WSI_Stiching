@@ -6,7 +6,7 @@ from PIL import Image
 import math
 import cv2
 
-
+"""
 def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices=None, verbose=1, draw_grid=True):
     downsamples = wsi_object.wsi.level_downsamples[vis_level]
     if indices is None:
@@ -34,6 +34,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
 
     return Image.fromarray(canvas)
 
+"""
 def StitchPatches(hdf5_file_path, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
     file = h5py.File(hdf5_file_path, 'r')
     dset = file['imgs']
