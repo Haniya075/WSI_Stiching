@@ -48,7 +48,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
     
     while w * h > Image.MAX_IMAGE_PIXELS:
         downscale += 1
-        vis_level = wsi.get_best_level_for_downsample(downscale)
+        #vis_level = wsi.get_best_level_for_downsample(downscale)
         w, h = wsi.level_dimensions[vis_level]
     
     file = h5py.File(hdf5_file_path, 'r')
