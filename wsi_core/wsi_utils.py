@@ -64,7 +64,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
             patch_size = tuple((np.array((patch_size, patch_size)) * wsi.level_downsamples[patch_level]).astype(np.int32))
             print('ref patch size: {}x{}'.format(patch_size, patch_size))
 
-            if w * h > Image.MAX_IMAGE_PIXELS: 
+            if w * h > (Image.MAX_IMAGE_PIXELS=None): 
                 raise Image.DecompressionBombError("Visualization Downscale %d is too large" % downscale)
 
             if alpha < 0 or alpha == -1:
