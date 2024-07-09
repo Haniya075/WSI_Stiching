@@ -105,6 +105,7 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
 		try:
 			WSI_object = WholeSlideImage(full_path)
 		except:
+			print("ERRORRRRR: ")
 			continue
 		# try:
 		# 	WSI_object.initXML(os.path.splitext(full_path)[0]+'.xml')
