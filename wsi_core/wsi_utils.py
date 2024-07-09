@@ -50,7 +50,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
         print(f"Error: {e}. Attempting to adjust downscale level.")
         # Try reducing downscale until a valid level is found or downscale < 1
         while downscale > 1:
-            downscale -= 1
+            downscale += 1
             try:
                 vis_level = wsi.get_best_level_for_downsample(downscale)
                 break  # Exit loop if a valid level is found
