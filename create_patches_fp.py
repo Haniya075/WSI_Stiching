@@ -196,33 +196,68 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
 
 
 		seg_time_elapsed = -1
-		if seg:
-			WSI_object, seg_time_elapsed = segment(WSI_object, current_seg_params, current_filter_params) 
+		try:
+    			if seg:
+        			try:
+            				WSI_object, seg_time_elapsed = segment(WSI_object, current_seg_params, current_filter_params)
+        			except Exception as e:
+            				print("Exception occurred during segmentation: ", e)
+            				traceback.print_exc()
+		except NameError as e:
+    			print("Variable 'seg' is not defined: ", e)
+    			traceback.print_exc()
 
-		if save_mask:
-			mask = WSI_object.visWSI(**current_vis_params)
-			mask_path = os.path.join(mask_save_dir, slide_id+'.jpg')
-			mask.save(mask_path)
+		try:
+    			if save_mask:
+        			try:
+            				mask = WSI_object.visWSI(**current_vis_params)
+            				mask_path = os.path.join(mask_save_dir, slide_id+'.jpg')
+            				mask.save(mask_path)
+        			except Exception as e:
+            				print("Exception occurred during mask saving: ", e)
+            				traceback.print_exc()
+		except NameError as e:
+    			print("Variable 'save_mask' is not defined: ", e)
+    			traceback.print_exc()
 
-		patch_time_elapsed = -1 # Default time
-		# import pdb;pdb.set_trace()
-		if patch:
-			current_patch_params.update({'patch_level': patch_level, 'patch_size': patch_size, 'step_size': step_size, 
-										 'save_path': patch_save_dir})
-			file_path, patch_time_elapsed = patching(WSI_object = WSI_object,  **current_patch_params,)
-		
-		stitch_time_elapsed = -1
-		if stitch:
-			file_path = os.path.join(patch_save_dir, slide_id+'.h5')
-			if os.path.isfile(file_path):
-				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=5)
-				stitch_path = os.path.join(stitch_save_dir, slide_id+'.jpg')
-				heatmap.save(stitch_path)
-				cropped_save_dir=r"./patches/cropped"
-				if not os.path.exists(cropped_save_dir):
-    					os.makedirs(cropped_save_dir)
-				cropped_path=os.path.join(cropped_save_dir,slide_id+'.jpg')
-				crop_image(heatmap,cropped_path)
+		try:
+    			patch_time_elapsed = -1  # Default time
+    			if patch:
+        			try:
+            				current_patch_params.update({
+                			'patch_level': patch_level,
+                			'patch_size': patch_size,
+                			'step_size': step_size,
+                			'save_path': patch_save_dir
+            				})
+            				file_path, patch_time_elapsed = patching(WSI_object=WSI_object, **current_patch_params)
+        			except Exception as e:
+            				print("Exception occurred during patching: ", e)
+            				traceback.print_exc()
+			except NameError as e:
+   				print("Variable 'patch' is not defined: ", e)
+    				traceback.print_exc()
+
+		try:
+    			stitch_time_elapsed = -1
+    			if stitch:
+        			try:
+            				file_path = os.path.join(patch_save_dir, slide_id+'.h5')
+            				if os.path.isfile(file_path):
+                				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=5)
+                				stitch_path = os.path.join(stitch_save_dir, slide_id+'.jpg')
+                				heatmap.save(stitch_path)
+                				cropped_save_dir = r"./patches/cropped"
+                				if not os.path.exists(cropped_save_dir):
+                    					os.makedirs(cropped_save_dir)
+                				cropped_path = os.path.join(cropped_save_dir, slide_id+'.jpg')
+                				crop_image(heatmap, cropped_path)
+        			except Exception as e:
+            				print("Exception occurred during stitching: ", e)
+            				traceback.print_exc()
+			except NameError as e:
+    				print("Variable 'stitch' is not defined: ", e)
+    				traceback.print_exc()
 				
 		print("segmentation took {} seconds".format(seg_time_elapsed))
 		print("patching took {} seconds".format(patch_time_elapsed))
