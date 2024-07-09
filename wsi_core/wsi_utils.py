@@ -67,7 +67,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
             
             #max_pixels = float('inf') if Image.MAX_IMAGE_PIXELS is None else Image.MAX_IMAGE_PIXELS
 
-            if w * h > max_pixels: 
+            if w * h > Image.MAX_IMAGE_PIXELS: 
                 raise Image.DecompressionBombError("Visualization Downscale %d is too large" % downscale)
 
             if alpha < 0 or alpha == -1:
