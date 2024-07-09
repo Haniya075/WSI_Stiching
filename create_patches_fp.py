@@ -254,9 +254,11 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
                 				cropped_path = os.path.join(cropped_save_dir, slide_id+'.jpg')
                 				crop_image(heatmap, cropped_path)
         			except Exception as e:
+					continue
             				print("Exception occurred during stitching: ", e)
             				traceback.print_exc()
 		except NameError as e:
+			continue
     			print("Variable 'stitch' is not defined: ", e)
     			traceback.print_exc()
 				
