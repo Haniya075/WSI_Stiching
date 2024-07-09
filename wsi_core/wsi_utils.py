@@ -6,7 +6,7 @@ from PIL import Image
 import math
 import cv2
 
-Image.MAX_IMAGE_PIXELS = None
+#Image.MAX_IMAGE_PIXELS = None
 
 def DrawGrid(img, coord, shape, thickness=2, color=(0,0,0,255)):
     cv2.rectangle(img, tuple(np.maximum([0, 0], coord-thickness//2)), tuple(coord - thickness//2 + np.array(shape)), (0, 0, 0, 255), thickness=thickness)
@@ -65,7 +65,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
             patch_size = tuple((np.array((patch_size, patch_size)) * wsi.level_downsamples[patch_level]).astype(np.int32))
             print('ref patch size: {}x{}'.format(patch_size, patch_size))
             
-            max_pixels = float('inf') if Image.MAX_IMAGE_PIXELS is None else Image.MAX_IMAGE_PIXELS
+            #max_pixels = float('inf') if Image.MAX_IMAGE_PIXELS is None else Image.MAX_IMAGE_PIXELS
 
             if w * h > max_pixels: 
                 raise Image.DecompressionBombError("Visualization Downscale %d is too large" % downscale)
