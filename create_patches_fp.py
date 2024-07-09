@@ -236,7 +236,7 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
             				traceback.print_exc()
 		except NameError as e:
    			print("Variable 'patch' is not defined: ", e)
-    		traceback.print_exc()
+    			#traceback.print_exc()
 
 		try:
     			stitch_time_elapsed = -1
