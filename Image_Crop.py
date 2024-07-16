@@ -19,6 +19,6 @@ def crop_image(image, output_path):
     cropped_image.save(output_path)
     print(f'Cropped image dimensions: {cropped_image.size}')
 
-return cropped_image
+    return cropped_image
     
 
