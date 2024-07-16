@@ -45,7 +45,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level,slide_id
     return img
 
 
-def StitchCoords(hdf5_file_path, wsi_object, downscale=5,slide_id ,draw_grid=False, bg_color=(0,0,0), alpha=-1):
+def StitchCoords(hdf5_file_path, wsi_object,slide_id ,downscale=5,draw_grid=False, bg_color=(0,0,0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
     
     while True:
