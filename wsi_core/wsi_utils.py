@@ -38,11 +38,6 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices
         if draw_grid:
             DrawGrid(canvas, coord, patch_size)
         
-        #cropped_save_dir = r"./patches/cropped"
-        #if not os.path.exists(cropped_save_dir):
-            #os.makedirs(cropped_save_dir)
-        #cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
-        #img=crop_image(Image.fromarray(canvas), cropped_path)
     return Image.fromarray(canvas)
 
 
@@ -83,9 +78,14 @@ def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_colo
 
             heatmap = np.array(heatmap)
             heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level ,indices=None, draw_grid=draw_grid)
+            cropped_save_dir = r"./patches/cropped"
+            if not os.path.exists(cropped_save_dir):
+                os.makedirs(cropped_save_dir)
+            cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
+            img=crop_image(heatmap, cropped_path)
             print(heatmap,type(heatmap))
             file.close()
-            return heatmap
+            return img
         
         except Image.DecompressionBombError as e:
             print(f"Error: {e}")
