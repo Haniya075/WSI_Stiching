@@ -37,8 +37,12 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
         if draw_grid:
             DrawGrid(canvas, coord, patch_size)
         
-
-    return Image.fromarray(canvas)
+        cropped_save_dir = r"./patches/cropped"
+        if not os.path.exists(cropped_save_dir):
+            os.makedirs(cropped_save_dir)
+        cropped_path = os.path.join(cropped_save_dir, slide_id+'.jpg')
+        img=crop_image(Image.fromarray(canvas), cropped_path)
+    return img
 
 
 def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
