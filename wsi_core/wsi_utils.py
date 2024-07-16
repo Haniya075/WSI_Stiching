@@ -12,7 +12,7 @@ def DrawGrid(img, coord, shape, thickness=2, color=(0,0,0,255)):
     cv2.rectangle(img, tuple(np.maximum([0, 0], coord-thickness//2)), tuple(coord - thickness//2 + np.array(shape)), (0, 0, 0, 255), thickness=thickness)
     return img
 
-def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices=None, verbose=1, draw_grid=True):
+def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level,slide_id ,indices=None, verbose=1, draw_grid=True):
     downsamples = wsi_object.wsi.level_downsamples[vis_level]
     if indices is None:
         indices = np.arange(len(coords))
@@ -45,7 +45,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
     return img
 
 
-def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_color=(0,0,0), alpha=-1):
+def StitchCoords(hdf5_file_path, wsi_object, downscale=5,slide_id ,draw_grid=False, bg_color=(0,0,0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
     
     while True:
@@ -81,7 +81,7 @@ def StitchCoords(hdf5_file_path, wsi_object, downscale=5, draw_grid=False, bg_co
                 heatmap = Image.new(size=(w, h), mode="RGBA", color=bg_color + (int(255 * alpha),))
 
             heatmap = np.array(heatmap)
-            heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level, indices=None, draw_grid=draw_grid)
+            heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level,slide_id ,indices=None, draw_grid=draw_grid)
             
             file.close()
             return heatmap
