@@ -5,6 +5,7 @@ import pdb
 from PIL import Image
 import math
 import cv2
+from Image_Crop import crop_image
 
 Image.MAX_IMAGE_PIXELS = None
 
