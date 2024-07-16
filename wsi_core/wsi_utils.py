@@ -38,12 +38,12 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices
         canvas[coord[1]:coord[1]+patch_size[1], coord[0]:coord[0]+patch_size[0], :3] = patch[:canvas_crop_shape[0], :canvas_crop_shape[1], :]
         if draw_grid:
             DrawGrid(canvas, coord, patch_size)
-    cropped_save_dir = r"./patches/cropped"
-    if not os.path.exists(cropped_save_dir):
-        os.makedirs(cropped_save_dir)
-    cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
-    img=crop_image(Image.fromarray(canvas), cropped_path)
-    #print(heatmap,type(heatmap))
+    #cropped_save_dir = r"./patches/cropped"
+    #if not os.path.exists(cropped_save_dir):
+        #os.makedirs(cropped_save_dir)
+    #cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
+    #img=crop_image(Image.fromarray(canvas), cropped_path)
+    ##print(heatmap,type(heatmap))
         
     return img
 
