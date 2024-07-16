@@ -22,7 +22,7 @@ def crop_image(image, output_path):
     cv2.drawContours(mask, contours, -1, 255, thickness=cv2.FILLED)
     x, y, w, h = cv2.boundingRect(mask)
     cropped_image = image[y:y+h, x:x+w]
-    cropped_img.save(output_path)
+    cropped_image.save(output_path)
     print(f'Cropped image dimensions: {cropped_image.size}')
 
     return cropped_image
