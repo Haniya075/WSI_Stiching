@@ -45,7 +45,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level,slide_id
     return img
 
 
-def StitchCoords(hdf5_file_path, wsi_object,slide_id ,downscale,draw_grid=False, bg_color=(0,0,0), alpha=-1):
+def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_color=(0,0,0), alpha=-1):
     wsi = wsi_object.getOpenSlide()
     
     while True:
@@ -81,7 +81,7 @@ def StitchCoords(hdf5_file_path, wsi_object,slide_id ,downscale,draw_grid=False,
                 heatmap = Image.new(size=(w, h), mode="RGBA", color=bg_color + (int(255 * alpha),))
 
             heatmap = np.array(heatmap)
-            heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level,slide_id ,indices=None, draw_grid=draw_grid)
+            heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level ,indices=None, draw_grid=draw_grid)
             
             file.close()
             return heatmap
