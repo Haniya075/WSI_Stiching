@@ -43,7 +43,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices
         os.makedirs(cropped_save_dir)
     cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
     img=crop_image(Image.fromarray(canvas), cropped_path)
-    print(heatmap,type(heatmap))
+    #print(heatmap,type(heatmap))
         
     return img
 
