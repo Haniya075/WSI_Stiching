@@ -36,7 +36,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level, indices
         canvas[coord[1]:coord[1]+patch_size[1], coord[0]:coord[0]+patch_size[0], :3] = patch[:canvas_crop_shape[0], :canvas_crop_shape[1], :]
         if draw_grid:
             DrawGrid(canvas, coord, patch_size)
-        print("type of canvas : ",type(canvas))
+        
 
     return Image.fromarray(canvas)
 
