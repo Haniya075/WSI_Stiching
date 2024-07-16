@@ -248,11 +248,7 @@ def seg_and_patch(source, save_dir, patch_save_dir, mask_save_dir, stitch_save_d
                 				heatmap, stitch_time_elapsed = stitching(file_path, WSI_object, downscale=5)
                 				stitch_path = os.path.join(stitch_save_dir, slide_id+'.jpg')
                 				heatmap.save(stitch_path)
-                				cropped_save_dir = r"./patches/cropped"
-                				if not os.path.exists(cropped_save_dir):
-                    					os.makedirs(cropped_save_dir)
-                				cropped_path = os.path.join(cropped_save_dir, slide_id+'.jpg')
-                				crop_image(heatmap, cropped_path)
+
         			except Exception as e:
 					#continue
             				print("Exception occurred during stitching: ", e)
