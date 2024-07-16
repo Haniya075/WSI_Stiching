@@ -37,8 +37,14 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices
         canvas[coord[1]:coord[1]+patch_size[1], coord[0]:coord[0]+patch_size[0], :3] = patch[:canvas_crop_shape[0], :canvas_crop_shape[1], :]
         if draw_grid:
             DrawGrid(canvas, coord, patch_size)
+    cropped_save_dir = r"./patches/cropped"
+    if not os.path.exists(cropped_save_dir):
+        os.makedirs(cropped_save_dir)
+    cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
+    img=crop_image(Image.fromarray(canvas), cropped_path)
+    print(heatmap,type(heatmap))
         
-    return Image.fromarray(canvas)
+    return img
 
 
 def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_color=(0,0,0), alpha=-1):
@@ -79,12 +85,7 @@ def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_colo
 
             heatmap = np.array(heatmap)
             heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level ,indices=None, draw_grid=draw_grid)
-            cropped_save_dir = r"./patches/cropped"
-            if not os.path.exists(cropped_save_dir):
-                os.makedirs(cropped_save_dir)
-            cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
-            img=crop_image(heatmap, cropped_path)
-            print(heatmap,type(heatmap))
+
             file.close()
             return img
         
