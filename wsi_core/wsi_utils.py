@@ -13,7 +13,7 @@ def DrawGrid(img, coord, shape, thickness=2, color=(0,0,0,255)):
     return img
 
 def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices=None, verbose=1, draw_grid=True):
-    count=0
+    count='0jsjk'
     downsamples = wsi_object.wsi.level_downsamples[vis_level]
     if indices is None:
         indices = np.arange(len(coords))
