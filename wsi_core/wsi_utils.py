@@ -13,6 +13,7 @@ def DrawGrid(img, coord, shape, thickness=2, color=(0,0,0,255)):
     return img
 
 def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level,slide_id ,indices=None, verbose=1, draw_grid=True):
+    count=0
     downsamples = wsi_object.wsi.level_downsamples[vis_level]
     if indices is None:
         indices = np.arange(len(coords))
@@ -40,7 +41,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level,slide_id
         cropped_save_dir = r"./patches/cropped"
         if not os.path.exists(cropped_save_dir):
             os.makedirs(cropped_save_dir)
-        cropped_path = os.path.join(cropped_save_dir, slide_id+'.jpg')
+        cropped_path = os.path.join(cropped_save_dir, count+'.jpg')
         img=crop_image(Image.fromarray(canvas), cropped_path)
     return img
 
