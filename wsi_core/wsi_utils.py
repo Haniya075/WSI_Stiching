@@ -46,6 +46,7 @@ def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_colo
     
     while True:
         try:
+            count='skaks'
             vis_level = wsi.get_best_level_for_downsample(downscale)
             file = h5py.File(hdf5_file_path, 'r')
             dset = file['coords']
