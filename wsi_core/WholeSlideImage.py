@@ -139,15 +139,15 @@ class WholeSlideImage(object):
         print("SEG LEVEL : ",seg_level)
         print("self.level_dim ",self.level_dim)
         img = np.array(self.wsi.read_region((0,0), seg_level, self.level_dim[seg_level]))
-        save_dir='./CROP'
-        if not os.path.exists(save_dir):
+        #save_dir='./CROP'
+        #if not os.path.exists(save_dir):
         # Create the directory
-            os.makedirs(save_dir)
-            print(f"Directory {save_dir} created.")
+            #os.makedirs(save_dir)
+            #print(f"Directory {save_dir} created.")
                                 
-        count='iio'
-        output=os.path.join(save_dir, count+'.png')
-        img=crop_image(img,output)
+        #count='iio'
+        #output=os.path.join(save_dir, count+'.png')
+        #img=crop_image(img,output)
         img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)  # Convert to HSV space
         img_med = cv2.medianBlur(img_hsv[:,:,1], mthresh)  # Apply median blurring
         
