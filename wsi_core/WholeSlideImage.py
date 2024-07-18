@@ -147,7 +147,7 @@ class WholeSlideImage(object):
                                 
         count='iio'
         output=os.path.join(save_dir, count+'.jpg')
-        crop_image(img,output)
+        img=crop_image(img,output)
         img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)  # Convert to HSV space
         img_med = cv2.medianBlur(img_hsv[:,:,1], mthresh)  # Apply median blurring
         
