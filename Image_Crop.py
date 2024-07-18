@@ -23,6 +23,8 @@ def crop_image(image, output_path):
     x, y, w, h = cv2.boundingRect(mask)
     cropped_image = image[y:y+h, x:x+w]
     cropped_image = Image.fromarray(cropped_image)
+    if cropped_image.mode == 'RGBA':
+        cropped_image = cropped_image.convert('RGB')
     cropped_image.save(output_path)
     print(f'Cropped image dimensions: {cropped_image.size}')
 
