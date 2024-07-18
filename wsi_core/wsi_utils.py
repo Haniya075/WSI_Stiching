@@ -88,7 +88,7 @@ def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_colo
             heatmap = DrawMapFromCoords(heatmap, wsi_object, coords, patch_size, vis_level ,indices=None, draw_grid=draw_grid)
 
             file.close()
-            return img
+            return heatmap
         
         except Image.DecompressionBombError as e:
             print(f"Error: {e}")
