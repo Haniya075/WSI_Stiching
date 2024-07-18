@@ -45,7 +45,7 @@ def DrawMapFromCoords(canvas, wsi_object, coords, patch_size, vis_level ,indices
     #img=crop_image(Image.fromarray(canvas), cropped_path)
     ##print(heatmap,type(heatmap))
         
-    return img
+    return Image.fromarray(canvas)
 
 
 def StitchCoords(hdf5_file_path, wsi_object,downscale=5,draw_grid=False, bg_color=(0,0,0), alpha=-1):
