@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 def crop_image(image, output_path):
-    image = np.array(image)
+    #image = np.array(image)
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     # Calculate the Laplacian variance of the grayscale image
     variance = cv2.Laplacian(gray, cv2.CV_64F).var()
