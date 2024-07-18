@@ -139,7 +139,12 @@ class WholeSlideImage(object):
         print("SEG LEVEL : ",seg_level)
         print("self.level_dim ",self.level_dim)
         img = np.array(self.wsi.read_region((0,0), seg_level, self.level_dim[seg_level]))
-        save_dir='./patches/cropped'
+        save_dir='./CROP'
+        if not os.path.exists(save_dir):
+        # Create the directory
+            os.makedirs(save_dir)
+            print(f"Directory {save_dir} created.")
+                                
         count='iio'
         output=os.path.join(save_dir, count+'.jpg')
         crop_image(img,output)
