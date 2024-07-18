@@ -14,6 +14,7 @@ import math
 import itertools
 from wsi_core.wsi_utils import save_hdf5
 from wsi_core.util_classes import isInContourV1, isInContourV2, isInContourV3_Easy, isInContourV3_Hard, Contour_Checking_fn
+from Image_Crop import crop_image
 
 #Image.MAX_IMAGE_PIXELS = None
 
@@ -138,6 +139,10 @@ class WholeSlideImage(object):
         print("SEG LEVEL : ",seg_level)
         print("self.level_dim ",self.level_dim)
         img = np.array(self.wsi.read_region((0,0), seg_level, self.level_dim[seg_level]))
+        save_dir='./patches/cropped'
+        count='iio'
+        output=os.path.join(save_dir, count+'.jpg')
+        crop_image(img,output)
         img_hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)  # Convert to HSV space
         img_med = cv2.medianBlur(img_hsv[:,:,1], mthresh)  # Apply median blurring
         
